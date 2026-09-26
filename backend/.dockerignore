@@ -1,0 +1,42 @@
+# Python cache & compiled files
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+
+# Virtual environment
+venv/
+.venv/
+env/
+
+# Dev / test artifacts
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Model weights — included in the image (model_weights.pth must be present)
+# To exclude and download at runtime instead, uncomment:
+# app/models/
+
+# Data directories
+data/
+*.wav
+*.mp3
+*.flac
+*.ogg
+
+# IDE / OS
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Logs
+*.log
+logs/
+
+# Export helper (not needed at runtime)
+export_onnx.py

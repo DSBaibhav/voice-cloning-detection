@@ -1,0 +1,10 @@
+{
+  "description": "Detects and prevents AI voice cloning and impersonation attacks in real time, enabling security teams to verify identities and mitigate fraud risks efficiently.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}

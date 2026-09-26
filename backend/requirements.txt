@@ -1,0 +1,13 @@
+fastapi
+uvicorn[standard]
+websockets
+torch
+torchaudio
+onnxruntime
+librosa
+numpy
+scipy
+webrtcvad-wheels
+pydantic
+python-multipart
+transformers

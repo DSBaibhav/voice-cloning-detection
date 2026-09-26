@@ -1,0 +1,157 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import 'tailwindcss';
+
+@theme {
+  --color-bg: #07080C;
+  --color-surface: #0B0D13;
+  --color-card: #0F1420;
+  --color-card2: #141C2C;
+  --color-elevated: #1A2438;
+  --color-border: #1C2840;
+  --color-border-strong: #253250;
+  --color-text-primary: #E4EAF4;
+  --color-text-secondary: #8896AA;
+  --color-text-muted: #4A5A72;
+  --color-accent: #3D7DF5;
+  --color-accent-bright: #6099FF;
+  --color-success: #12B981;
+  --color-warning: #F59E0B;
+  --color-danger: #EF4444;
+  --color-purple: #8B6CF6;
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  font-family: var(--font-sans);
+  background-color: #07080C;
+  color: #E4EAF4;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body { margin: 0; min-height: 100vh; }
+
+#root { min-height: 100vh; }
+
+/* Custom scrollbars */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #1C2840 transparent;
+}
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #1C2840; border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: #253250; }
+
+/* Waveform animation */
+@keyframes wave-a {
+  0%, 100% { height: 6px; }
+  50% { height: 40px; }
+}
+@keyframes wave-b {
+  0%, 100% { height: 18px; }
+  50% { height: 56px; }
+}
+@keyframes wave-c {
+  0%, 100% { height: 10px; }
+  50% { height: 32px; }
+}
+@keyframes wave-d {
+  0%, 100% { height: 4px; }
+  50% { height: 48px; }
+}
+
+@keyframes pulse-dot {
+  0% { transform: scale(1); opacity: 1; }
+  70% { transform: scale(2); opacity: 0; }
+  100% { transform: scale(2); opacity: 0; }
+}
+
+@keyframes status-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+@keyframes sweep-line {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(400%); }
+}
+
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes counter-fill {
+  from { stroke-dashoffset: 220; }
+}
+
+.anim-fade-in {
+  animation: fade-in-up 0.3s ease-out;
+}
+
+.waveform-bar {
+  width: 3px;
+  border-radius: 2px;
+  transform-origin: bottom;
+}
+.waveform-bar.anim { animation: wave-b 1.2s ease-in-out infinite; }
+.waveform-bar.anim:nth-child(1)  { animation-name: wave-a; animation-delay: 0s; }
+.waveform-bar.anim:nth-child(2)  { animation-delay: 0.07s; }
+.waveform-bar.anim:nth-child(3)  { animation-name: wave-c; animation-delay: 0.14s; }
+.waveform-bar.anim:nth-child(4)  { animation-name: wave-d; animation-delay: 0.04s; }
+.waveform-bar.anim:nth-child(5)  { animation-delay: 0.18s; }
+.waveform-bar.anim:nth-child(6)  { animation-name: wave-a; animation-delay: 0.22s; }
+.waveform-bar.anim:nth-child(7)  { animation-name: wave-d; animation-delay: 0.09s; }
+.waveform-bar.anim:nth-child(8)  { animation-name: wave-c; animation-delay: 0.16s; }
+.waveform-bar.anim:nth-child(9)  { animation-delay: 0.28s; }
+.waveform-bar.anim:nth-child(10) { animation-name: wave-d; animation-delay: 0.11s; }
+.waveform-bar.anim:nth-child(11) { animation-delay: 0.05s; }
+.waveform-bar.anim:nth-child(12) { animation-name: wave-a; animation-delay: 0.20s; }
+.waveform-bar.anim:nth-child(13) { animation-name: wave-d; animation-delay: 0.13s; }
+.waveform-bar.anim:nth-child(14) { animation-delay: 0.25s; }
+.waveform-bar.anim:nth-child(15) { animation-name: wave-c; animation-delay: 0.03s; }
+.waveform-bar.anim:nth-child(16) { animation-name: wave-d; animation-delay: 0.17s; }
+.waveform-bar.anim:nth-child(17) { animation-delay: 0.08s; }
+.waveform-bar.anim:nth-child(18) { animation-name: wave-a; animation-delay: 0.23s; }
+.waveform-bar.anim:nth-child(19) { animation-name: wave-d; animation-delay: 0.12s; }
+.waveform-bar.anim:nth-child(20) { animation-delay: 0.30s; }
+.waveform-bar.anim:nth-child(21) { animation-name: wave-c; animation-delay: 0.06s; }
+.waveform-bar.anim:nth-child(22) { animation-name: wave-d; animation-delay: 0.19s; }
+.waveform-bar.anim:nth-child(23) { animation-delay: 0.24s; }
+.waveform-bar.anim:nth-child(24) { animation-name: wave-a; animation-delay: 0.10s; }
+.waveform-bar.anim:nth-child(25) { animation-name: wave-d; animation-delay: 0.15s; }
+.waveform-bar.anim:nth-child(26) { animation-delay: 0.27s; }
+.waveform-bar.anim:nth-child(27) { animation-name: wave-c; animation-delay: 0.02s; }
+.waveform-bar.anim:nth-child(28) { animation-name: wave-d; animation-delay: 0.21s; }
+.waveform-bar.anim:nth-child(29) { animation-delay: 0.26s; }
+.waveform-bar.anim:nth-child(30) { animation-name: wave-a; animation-delay: 0.01s; }
+
+.pulse-dot {
+  position: relative;
+}
+.pulse-dot::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: currentColor;
+  animation: pulse-dot 2s ease-out infinite;
+}
+
+.status-blink {
+  animation: status-blink 2s ease-in-out infinite;
+}
+
+/* Gauge arc */
+.gauge-track { stroke: #1C2840; }
+.gauge-fill {
+  stroke-dasharray: 220;
+  stroke-dashoffset: 220;
+  transition: stroke-dashoffset 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+  stroke-linecap: round;
+}
