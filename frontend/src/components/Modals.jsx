@@ -112,7 +112,7 @@ export function DemoGuideModal({ onClose }) {
               <BookOpen size={20} />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-slate-900">How to Use & Demonstrate VoxGuard</h2>
+              <h2 className="text-lg font-bold text-slate-900">How to Use & Demonstrate SATYA VAANI</h2>
               <p className="text-xs text-slate-500">Live Voice Clone Detection & Impersonation Prevention Guide</p>
             </div>
           </div>
@@ -164,7 +164,7 @@ export function DemoGuideModal({ onClose }) {
               3. How to Demonstrate Attack Prevention
             </h3>
             <p className="text-slate-600">
-              When an AI clone is intercepted, VoxGuard doesn't just alert; it takes active security countermeasures:
+              When an AI clone is intercepted, SATYA VAANI doesn't just alert; it takes active security countermeasures:
             </p>
             <ul className="list-disc list-inside space-y-1 text-slate-600 pl-1">
               <li><strong>Strict Auto-Lockout:</strong> If enabled, the channel is instantly muted/quarantined so the attacker cannot social-engineer the agent.</li>

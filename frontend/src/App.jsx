@@ -18,7 +18,30 @@ import {
   playVerifiedSound,
 } from './utils/audioAlerts';
 
-const WS_URL = import.meta.env.VITE_BACKEND_WS_URL || 'ws://localhost:8000/ws/monitor';
+import { BackendConfigModal } from './components/BackendConfigModal';
+
+function getInitialWsUrl() {
+  if (typeof window === 'undefined') return '';
+  const saved = localStorage.getItem('satya_vaani_ws_url');
+  if (saved && !saved.includes('<') && !saved.includes('>')) {
+    return saved;
+  }
+  const envUrl = import.meta.env.VITE_BACKEND_WS_URL;
+  if (envUrl && !envUrl.includes('<') && !envUrl.includes('>') && envUrl.trim() !== '') {
+    return envUrl;
+  }
+  if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    return 'ws://localhost:8000/ws/monitor';
+  }
+  return '';
+}
+
+function isValidWsUrl(url) {
+  if (!url || typeof url !== 'string') return false;
+  if (url.includes('<') || url.includes('>')) return false;
+  return url.startsWith('ws://') || url.startsWith('wss://');
+}
+
 const TARGET_SR = 16000;
 const BUFFER_SEC = 2.0; // 2-second chunks = 32,000 samples for responsive live feedback
 
@@ -41,6 +64,10 @@ export default function App() {
   // Navigation
   const [currentRoute, setCurrentRoute] = useState('live-shield');
   const [isGuideOpen, setIsGuideOpen] = useState(false);
+  const [isBackendModalOpen, setIsBackendModalOpen] = useState(false);
+
+  // Backend connection
+  const [wsUrl, setWsUrl] = useState(getInitialWsUrl);
 
   // Security policies
   const [strictLockout, setStrictLockout] = useState(true);
@@ -98,6 +125,14 @@ export default function App() {
   // Start monitoring callback
   const startMonitoring = useCallback(async () => {
     setErrorMsg(null);
+
+    // Validate that we have a valid WebSocket backend URL
+    if (!isValidWsUrl(wsUrl)) {
+      setIsBackendModalOpen(true);
+      setErrorMsg("Please configure your Render backend URL (e.g. wss://your-service.onrender.com/ws/monitor) to activate Live Shield.");
+      return;
+    }
+
     setMonitorState('connecting');
 
     try {
@@ -127,12 +162,13 @@ export default function App() {
       source.connect(processor);
       processor.connect(audioCtx.destination);
 
-      const ws = new WebSocket(WS_URL);
+      const ws = new WebSocket(wsUrl);
       ws.binaryType = 'arraybuffer';
       wsRef.current = ws;
 
       ws.onopen = () => {
         setMonitorState('active');
+        setErrorMsg(null);
       };
 
       ws.onmessage = (event) => {
@@ -177,10 +213,19 @@ export default function App() {
         }
       };
 
-      ws.onerror = () => {
-        setErrorMsg('WebSocket connection failed. Verify backend server is running on port 8000.');
-        setMonitorState('error');
-        stopMonitoring();
+      ws.onerror = (e) => {
+        console.error("WebSocket connection error:", e);
+        if (wsUrl.includes('onrender.com')) {
+          setErrorMsg("Connecting to Render backend failed. Note: Render free tier services spin down after 15m of inactivity and take ~30-45s to wake up. Click the backend connection button above to test.");
+        } else {
+          setErrorMsg("WebSocket connection failed. Verify your backend server is running and accessible.");
+        }
+      };
+
+      ws.onclose = () => {
+        if (monitorState === 'active') {
+          setMonitorState('idle');
+        }
       };
 
       processor.onaudioprocess = (e) => {
@@ -216,7 +261,7 @@ export default function App() {
       setMonitorState('error');
       stopMonitoring();
     }
-  }, [stopMonitoring, soundEnabled]);
+  }, [wsUrl, stopMonitoring, soundEnabled]);
 
   // Simulated verdict trigger for instant demonstrations
   const handleSimulateVerdict = (type) => {
@@ -258,6 +303,12 @@ export default function App() {
     setSpoofCount(0);
   };
 
+  const handleSaveWsUrl = (newUrl) => {
+    setWsUrl(newUrl);
+    localStorage.setItem('satya_vaani_ws_url', newUrl);
+    setErrorMsg(null);
+  };
+
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 font-sans flex antialiased">
       {/* ── Fixed Sidebar Navigation ─────────────────────────────────────── */}
@@ -277,8 +328,10 @@ export default function App() {
           current={currentRoute}
           monitorState={monitorState}
           soundEnabled={soundEnabled}
+          wsUrl={wsUrl}
           onToggleSound={() => setSoundEnabled((v) => !v)}
           onOpenGuide={() => setIsGuideOpen(true)}
+          onOpenBackendConfig={() => setIsBackendModalOpen(true)}
         />
 
         <main className="pt-20 px-8 pb-12 max-w-6xl w-full mx-auto">
@@ -337,6 +390,14 @@ export default function App() {
 
       {/* Interactive Testing & Demo Guide Modal */}
       {isGuideOpen && <DemoGuideModal onClose={() => setIsGuideOpen(false)} />}
+
+      {/* Backend Connection Modal */}
+      <BackendConfigModal
+        isOpen={isBackendModalOpen}
+        onClose={() => setIsBackendModalOpen(false)}
+        currentUrl={wsUrl}
+        onSaveUrl={handleSaveWsUrl}
+      />
     </div>
   );
 }

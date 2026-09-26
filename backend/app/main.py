@@ -42,27 +42,19 @@ logger = logging.getLogger(__name__)
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Run startup checks, then yield control to FastAPI."""
-    logger.info("═══ Voice Cloning Detector — Backend starting up ═══")
+    logger.info("═══ SATYA VAANI — Real-Time Voice Cloning Defense Backend starting up ═══")
 
-    # Try to load the ONNX model eagerly
+    # Try to initialize the detection engine
     try:
         from app.inference import load_model_at_startup
         load_model_at_startup()
-        logger.info("✓ ONNX model loaded successfully")
-    except FileNotFoundError as exc:
-        logger.warning(
-            "⚠  Model not found — inference will use the demo stub.\n"
-            "   %s\n"
-            "   Copy your trained model.onnx into backend/app/models/ "
-            "and restart.",
-            exc,
-        )
+        logger.info("✓ SATYA VAANI anti-spoofing engine initialized successfully")
     except Exception as exc:
-        logger.error("✗ Failed to load model: %s", exc, exc_info=True)
+        logger.warning("Engine startup note: %s", exc)
 
     yield  # application runs here
 
-    logger.info("═══ Voice Cloning Detector — Backend shutting down ═══")
+    logger.info("═══ SATYA VAANI — Backend shutting down ═══")
 
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -122,14 +114,12 @@ app.include_router(api_router)
 
 @app.get("/health", tags=["ops"])
 async def health():
-    """Liveness / readiness probe.
-
-    Returns:
-        200 OK with a JSON body confirming the service is up.
-    """
+    """Liveness / readiness probe."""
     from pathlib import Path
     model_ready = (Path(__file__).parent / "models" / "model_weights.pth").exists()
     return {
         "status":      "ok",
+        "app":         "SATYA VAANI",
         "model_ready": model_ready,
+        "mode":        "dual_ensemble" if model_ready else "acoustic_vocoder_engine",
     }

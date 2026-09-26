@@ -20,10 +20,27 @@ export function Topbar({
   current = 'live-shield',
   monitorState = 'idle',
   soundEnabled = true,
+  wsUrl = '',
   onToggleSound,
   onOpenGuide,
+  onOpenBackendConfig,
 }) {
   const currentInfo = TITLES[current] || TITLES['live-shield'];
+
+  // Format a friendly label for the backend indicator
+  let backendLabel = 'Connect Backend';
+  try {
+    if (wsUrl) {
+      if (wsUrl.includes('localhost') || wsUrl.includes('127.0.0.1')) {
+        backendLabel = 'Localhost: 8000';
+      } else {
+        const httpEquivalent = wsUrl.replace('wss://', 'https://').replace('ws://', 'http://');
+        backendLabel = new URL(httpEquivalent).hostname.replace('.onrender.com', ' (Render)');
+      }
+    }
+  } catch {
+    backendLabel = 'Configure Backend';
+  }
 
   return (
     <header className="fixed top-0 left-64 right-0 h-14 z-20 flex items-center justify-between px-6 border-b border-slate-200 bg-white/95 backdrop-blur-sm">
@@ -50,11 +67,16 @@ export function Topbar({
           </span>
         </div>
 
-        {/* Backend API Connection Indicator */}
-        <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-50 border border-slate-200 text-[11px] text-slate-600 font-medium">
-          <Wifi size={12} className="text-emerald-600" />
-          <span>Port 8000</span>
-        </div>
+        {/* Backend API Connection Button */}
+        <button
+          onClick={onOpenBackendConfig}
+          type="button"
+          title="Click to configure backend connection (Render or Localhost)"
+          className="hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-50 hover:bg-slate-100 border border-slate-200 text-[11px] text-slate-700 font-medium transition-colors"
+        >
+          <Wifi size={12} className={wsUrl ? "text-emerald-600" : "text-amber-500"} />
+          <span className="max-w-[160px] truncate">{backendLabel}</span>
+        </button>
 
         {/* Sound Toggle */}
         <button

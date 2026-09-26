@@ -26,8 +26,8 @@ export function Sidebar({ current = 'live-shield', onNavigate, onOpenGuide, live
             <ShieldCheck size={20} />
           </div>
           <div>
-            <div className="text-sm font-bold tracking-tight text-slate-900">VOXGUARD</div>
-            <div className="text-[10px] text-slate-500 font-medium">Voice Identity Shield</div>
+            <div className="text-sm font-bold tracking-tight text-slate-900">SATYA VAANI</div>
+            <div className="text-[10px] text-slate-500 font-medium">AI Voice Defense Shield</div>
           </div>
         </div>
       </div>
